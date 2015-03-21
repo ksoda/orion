@@ -19,12 +19,11 @@ function setBoard(sel) {
 
 
     // var board = remote.combine(bd, Board.plus).log();
-    var remote = Bacon.fromEvent(myFirebaseRef, 'value')
-    .map(function(snapshot){
-        return assocToArray(snapshot.val().board);
-    });
-    var bd = clear.flatMapLatest(genBoards);
-    var board = bd.combine(remote, Board.plus);
+    // var remote = Bacon.fromEvent(myFirebaseRef, 'value')
+    // .map(function(snapshot){
+    //     return assocToArray(snapshot.val().board);
+    // });
+    var board = clear.flatMapLatest(genBoards);
 
     var
     draw = BoardHelper.makeDrawer(sel),
