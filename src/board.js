@@ -1,4 +1,3 @@
-var myFirebaseRef;
 function setBoard(sel) {
     BoardHelper.drawBoard(sel);
     // stream
@@ -17,15 +16,7 @@ function setBoard(sel) {
     clear = $(sel).find('.clear').asEventStream('click'),
     tick = $('#tick').asEventStream('click');
 
-
-    // var board = remote.combine(bd, Board.plus).log();
-    var remote = Bacon.fromEvent(myFirebaseRef, 'value')
-    .map(function(snapshot){
-        return assocToArray(snapshot.val().board);
-    });
-    var bd = clear.flatMapLatest(genBoards);
-    var board = bd.combine(remote, Board.plus);
-
+    var board = genBoards();
     var
     draw = BoardHelper.makeDrawer(sel),
     interval = Bacon.interval(1000 / 4),
@@ -101,8 +92,8 @@ var BoardHelper;
     function makeDrawer(sel) {
         var board = $(sel);
         return function (time, bd) {
-            var throttledSync = _.throttle(sync, 3000, {leading: false});
-            if(!time && sel == '#board2') throttledSync(bd);
+            // var throttledSync = _.throttle(sync, 3000, {leading: false});
+            // if(!time && sel == '#board2') throttledSync(bd);
             board.find('.col').removeClass('now');
             board.find('.col').eq(time).addClass('now');
             board.find('.cell').removeClass('active');
@@ -118,11 +109,11 @@ var BoardHelper;
     function scale(i){
         return (BoardHelper.Y - i - 1) % BoardHelper.NumOctaveCell;
     }
-    function sync(board){
-        return myFirebaseRef.set({
-            board: arrayToJSON(board)
-        });
-    }
+    // function sync(board){
+    //     return myFirebaseRef.set({
+    //         board: arrayToJSON(board)
+    //     });
+    // }
     function arrayToJSON(ary){
         return _.object(_.range(ary.length), _.isArray(ary[0]) ?
             _.map(ary, arrayToJSON) : ary);

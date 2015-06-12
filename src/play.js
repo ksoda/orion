@@ -1,10 +1,5 @@
 $(function() {
-  var i = -1;
-  while(i < 0 || 10 < i) {
-    i = prompt('room number?');
-  }
-  myFirebaseRef = new Firebase("https://orion1.firebaseio.com/").child('room'+i);
-  // setBoard('#board');
+  setBoard('#board');
   setBoard('#board2');
 
   $('.clear').trigger('click');
