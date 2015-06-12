@@ -16,7 +16,7 @@ function setBoard(sel) {
     clear = $(sel).find('.clear').asEventStream('click'),
     tick = $('#tick').asEventStream('click');
 
-    var board = genBoards();
+    var board = clear.flatMapLatest(genBoards);
     var
     draw = BoardHelper.makeDrawer(sel),
     interval = Bacon.interval(1000 / 4),
