@@ -1,6 +1,14 @@
 import _ from 'lodash'
 import $ from 'jquery'
 import Bacon from 'baconjs'
+import AudioSynth from 'audiosynth'
+
+const AudioContext = window.AudioContext || window.webkitAudioContext
+const context = new AudioContext()
+const synth = new AudioSynth(context)
+const wave_enum = {sine:0,square:1,sawtooth:2,triangle:3}
+synth.setOscWave(wave_enum['sine'])
+
 
 export default function (sel) {
     $.fn.asEventStream = Bacon.$.asEventStream
@@ -38,9 +46,6 @@ export default function (sel) {
 
     chord.onValue(c => play(c));
 
-    // -> stream
-    function remoteBoards(){
-    }
 
     // -> stream
     function genBoards() {
@@ -69,22 +74,24 @@ export default function (sel) {
 }
 
 function makePlayer(scaleNames){
-  return chord => {
-    chord.forEach(noteid => {
-        var sound;
-        var src = ['sounds/', scaleNames[noteid], '.ogg'].join('');
-
-        if(_.isEmpty(scaleNames[noteid]) ) console.error(noteid);
-        sound = new Audio(src);
-        sound.play();
-    });
-  };
+    const playNote = (n, oct=4) => {
+        synth.playNote(synth.noteToMIDI(n, oct), 1.0, 1.0, 0)
+    }
+    return chord => {
+        chord.forEach(noteid => {
+            if(_.isEmpty(scaleNames[noteid]) ) console.error(noteid);
+            let [n,o]=scaleNames[noteid].split('')
+            playNote(n,o)
+        });
+    };
 }
 
-var penta4 = ['C','D','F','G','A',
-              'C1','D1','F1','G1','A1',
-              'C2','D2','F2','G2','A2',
-              'C3','D3','F3','G3','A3'];
+var penta4 = 
+    [ 'C1','D1','F1','G1','A1'
+    , 'C2','D2','F2','G2','A2'
+    , 'C3','D3','F3','G3','A3'
+    , 'C4','D4','F4','G4','A4' 
+    ]
 
 var play = makePlayer(penta4);
 

@@ -28,6 +28,7 @@
     "tape": "^4.6.3"
   },
   "dependencies": {
+    "audiosynth": "0.0.5",
     "baconjs": "^0.7.89",
     "h": "^0.1.0",
     "jquery": "^3.1.1",
