@@ -1,4 +1,9 @@
-function setBoard(sel) {
+import _ from 'lodash'
+import $ from 'jquery'
+import Bacon from 'baconjs'
+
+export default function (sel) {
+    $.fn.asEventStream = Bacon.$.asEventStream
     BoardHelper.drawBoard(sel);
     // stream
     var
@@ -51,7 +56,7 @@ function setBoard(sel) {
 
     function toCoordinate(e) {
         return [
-            $(e.srcElement.parentNode).index(),
+            $(e.originalEvent.srcElement.parentNode).index(),
             BoardHelper.Y - 1 - $(e.target).index()];
     }
 
@@ -66,6 +71,27 @@ function setBoard(sel) {
         return l.target == r.target;
     }
 }
+
+function makePlayer(scaleNames){
+  return function(chord) {
+    chord.forEach(function(noteid) {
+      var sound,
+        src = ['sounds/', scaleNames[noteid], '.ogg'].join('');
+
+      if(_.isEmpty(scaleNames[noteid]) ) console.error(noteid);
+      sound = new Audio(src);
+      sound.play();
+    });
+  };
+}
+
+var penta4 = ['C','D','F','G','A',
+              'C1','D1','F1','G1','A1',
+              'C2','D2','F2','G2','A2',
+              'C3','D3','F3','G3','A3'];
+
+var play = makePlayer(penta4);
+
 
 var BoardHelper;
 (function (BoardHelper) {
@@ -92,8 +118,6 @@ var BoardHelper;
     function makeDrawer(sel) {
         var board = $(sel);
         return function (time, bd) {
-            // var throttledSync = _.throttle(sync, 3000, {leading: false});
-            // if(!time && sel == '#board2') throttledSync(bd);
             board.find('.col').removeClass('now');
             board.find('.col').eq(time).addClass('now');
             board.find('.cell').removeClass('active');
@@ -109,11 +133,6 @@ var BoardHelper;
     function scale(i){
         return (BoardHelper.Y - i - 1) % BoardHelper.NumOctaveCell;
     }
-    // function sync(board){
-    //     return myFirebaseRef.set({
-    //         board: arrayToJSON(board)
-    //     });
-    // }
     function arrayToJSON(ary){
         return _.object(_.range(ary.length), _.isArray(ary[0]) ?
             _.map(ary, arrayToJSON) : ary);
@@ -133,7 +152,7 @@ var Board = (function () {
         });
 
         function switchChord(chord, note) {
-            return _.contains(chord, note) ?
+            return _.includes(chord, note) ?
             _.without(chord, note) : chord.concat([note]);
         }
     };
