@@ -33,6 +33,7 @@ describe('app tests', () => {
             )({ DOM, history } as any);
 
             const expected$ = Time.diagram('1-2--1--1--2-').map<VNode>(
+                // @ts-expect-error
                 (n: string) => (
                     <div>
                         <h2>{`My Awesome Cycle.js app - Page ${n}`}</h2>

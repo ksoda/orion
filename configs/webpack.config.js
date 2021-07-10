@@ -15,18 +15,14 @@ const { css, file, url } = require('@webpack-blocks/assets');
 const devServer = require('@webpack-blocks/dev-server');
 const extractText = require('@webpack-blocks/extract-text');
 const postcss = require('@webpack-blocks/postcss');
-const sass = require('@webpack-blocks/sass');
 const uglify = require('@webpack-blocks/uglify');
-const typescript = require('@webpack-blocks/typescript');
-const tslint = require('@webpack-blocks/tslint');
 
-const webpackMerge = require('webpack-merge');
+const webpackMerge = require('webpack-merge').merge;
 const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 
 const path = require('path');
@@ -42,22 +38,26 @@ module.exports = webpackMerge(
         setMode(
             process.env.NODE_ENV === 'production' ? 'production' : 'development'
         ),
-        typescript({
-            useCache: true,
-            cacheDirectory: 'node_modules/.cache/at-loader'
+        customConfig({
+            module: {
+                rules: [
+                    {
+                        test: /\.tsx?$/,
+                        loader: 'ts-loader',
+                        options: { allowTsInNodeModules: true }
+                    }
+                ]
+            }
         }),
-        tslint(),
-        resolve({ extensions: ['.js', '.jsx'] }),
+        resolve({ extensions: ['.ts', '.tsx', '.js', '.jsx'] }),
         match(
-            ['*.scss', '*.sass'],
+            ['*.css'],
             [
                 css(),
-                sass({
-                    includePaths: [appPath('node_modules')],
-                    sourceMap: true
-                }),
                 postcss({
-                    plugins: [autoprefixer({ browsers: ['last 2 versions'] })]
+                    postcssOptions: {
+                        plugins: [autoprefixer()]
+                    }
                 }),
 
                 env('production', [extractText('[name].[hash].css')])
@@ -91,8 +91,11 @@ module.exports = webpackMerge(
                 port: PORT,
                 contentBase: appPath('public')
             }),
-            sourceMaps(),
-            addPlugins([new webpack.NamedModulesPlugin()])
+
+            customConfig({
+                devtool: 'eval-cheap-module-source-map',
+                optimization: { moduleIds: 'named' }
+            })
         ]),
         env('production', [
             uglify({
@@ -105,11 +108,16 @@ module.exports = webpackMerge(
                 }
             }),
             addPlugins([
-                new CleanWebpackPlugin([appPath('build')], {
-                    root: process.cwd()
-                }),
-                new CopyWebpackPlugin([{ from: 'public', to: '' }])
-            ])
+                new CopyWebpackPlugin({
+                    patterns: [{ from: 'public', to: '' }]
+                })
+            ]),
+            customConfig({
+                output: {
+                    filename: 'utils.min.js',
+                    path: appPath('build')
+                }
+            })
         ])
     ]),
     userConfig,

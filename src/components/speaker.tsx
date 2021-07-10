@@ -59,14 +59,17 @@ function view(state$: Stream<State>): Stream<VNode> {
 
 function intent(DOM: DOMSource): DOMIntent {
     const updateText$ = DOM.select('#text')
+        // @ts-expect-error
         .events('input')
         .map((ev: any) => ev.target.value);
 
     const speech$ = DOM.select('[data-action="speak"]')
+        // @ts-expect-error
         .events('click')
         .mapTo(null);
 
     const link$ = DOM.select('[data-action="navigate"]')
+        // @ts-expect-error
         .events('click')
         .mapTo(null);
 

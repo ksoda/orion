@@ -45,6 +45,7 @@ function model(
 }
 
 function view(state$: Stream<State>): Stream<VNode> {
+    // @ts-expect-error
     return state$.map(({ count }) => (
         <div>
             <h2>My Awesome Cycle.js app - Page 1</h2>
@@ -64,14 +65,17 @@ function view(state$: Stream<State>): Stream<VNode> {
 
 function intent(DOM: DOMSource): DOMIntent {
     const increment$ = DOM.select('.add')
+        // @ts-expect-error
         .events('click')
         .mapTo(null);
 
     const decrement$ = DOM.select('.subtract')
+        // @ts-expect-error
         .events('click')
         .mapTo(null);
 
     const link$ = DOM.select('[data-action="navigate"]')
+        // @ts-expect-error
         .events('click')
         .mapTo(null);
 
