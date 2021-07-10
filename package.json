@@ -3,13 +3,8 @@
     "version": "0.1.0",
     "private": true,
     "devDependencies": {
+        "@tsconfig/node14": "^1.0.1",
         "@types/mocha": "^5.2.5",
-        "cyclejs-test-helpers": "^4.0.0",
-        "husky": "^1.2.0",
-        "lint-staged": "^8.1.0",
-        "prettier": "^1.15.3",
-        "snabbdom-looks-like": "^1.0.5",
-        "snabbdom-pragma": "^2.8.0",
         "@types/webpack": "^4.4.21",
         "@types/webpack-env": "^1.13.6",
         "@webpack-blocks/assets": "^2.0.0-alpha",
@@ -27,14 +22,20 @@
         "clean-webpack-plugin": "^1.0.0",
         "copy-webpack-plugin": "^4.6.0",
         "cross-env": "^5.2.0",
+        "cyclejs-test-helpers": "^4.0.0",
         "html-webpack-harddisk-plugin": "^1.0.1",
         "html-webpack-plugin": "^3.2.0",
+        "husky": "^1.2.0",
         "istanbul-instrumenter-loader-fix": "^3.0.2",
+        "lint-staged": "^8.1.0",
         "mocha": "^5.2.0",
         "mocha-webpack": "^2.0.0-beta.0",
         "node-sass": "^4.11.0",
         "nyc": "^13.1.0",
+        "prettier": "^1.15.3",
         "rimraf": "^2.6.2",
+        "snabbdom-looks-like": "^1.0.5",
+        "snabbdom-pragma": "^2.8.0",
         "typescript": "~3.2.2",
         "webpack": "^4.27.1",
         "webpack-cli": "^3.1.2",
@@ -86,5 +87,13 @@
         "switch-path": "^1.2.0",
         "xstream": "^11.7.0"
     },
-    "one-fits-all": true
+    "one-fits-all": true,
+    "browserslist": [
+        "defaults",
+        "not IE 11",
+        "maintained node versions"
+    ],
+    "engines": {
+        "node": ">= 14"
+    }
 }
