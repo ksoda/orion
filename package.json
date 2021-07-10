@@ -1,41 +1,67 @@
 {
-  "name": "orion",
-  "version": "1.0.0",
-  "description": "orion =====",
-  "main": "index.js",
-  "scripts": {
-    "test": "babel-node sagas.spec.js | tap-spec",
-    "start": "budo index.js --live -- -t babelify"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ksoda/orion.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ksoda/orion/issues"
-  },
-  "homepage": "https://github.com/ksoda/orion#readme",
-  "devDependencies": {
-    "babel-cli": "^6.22.2",
-    "babel-preset-es2015": "^6.22.0",
-    "babel-preset-react": "^6.22.0",
-    "babelify": "^7.3.0",
-    "budo": "^9.4.5",
-    "redux-devtools": "^3.3.2",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.6.3"
-  },
-  "dependencies": {
-    "audiosynth": "0.0.5",
-    "baconjs": "^0.7.89",
-    "h": "^0.1.0",
-    "jquery": "^3.1.1",
-    "lodash": "^4.17.4",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "react-redux": "^5.0.2",
-    "redux": "^3.6.0"
-  }
+    "name": "orion",
+    "version": "0.1.0",
+    "private": true,
+    "devDependencies": {
+        "@types/mocha": "^5.2.5",
+        "cycle-scripts-one-fits-all": "7.2.1",
+        "cyclejs-test-helpers": "^4.0.0",
+        "husky": "^1.2.0",
+        "lint-staged": "^8.1.0",
+        "prettier": "^1.15.3",
+        "snabbdom-looks-like": "^1.0.5",
+        "snabbdom-pragma": "^2.8.0"
+    },
+    "scripts": {
+        "format": "prettier --write '{src,test}/**/*.{js,jsx,ts,tsx}'",
+        "start": "cycle-scripts start",
+        "test": "cycle-scripts test",
+        "build": "cycle-scripts build",
+        "eject": "cycle-scripts eject",
+        "clean": "cycle-scripts clean"
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx}": [
+            "prettier --write",
+            "git add"
+        ]
+    },
+    "prettier": {
+        "tabWidth": 4,
+        "singleQuote": true
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "nyc": {
+        "instrument": false,
+        "sourceMap": false,
+        "include": [
+            "src/components"
+        ],
+        "reporter": [
+            "html",
+            "text"
+        ]
+    },
+    "mocha-webpack": {
+        "include": [
+            "test/**/*.test.{js,jsx,ts,tsx}"
+        ]
+    },
+    "dependencies": {
+        "@cycle/dom": "^22.3.0",
+        "@cycle/history": "^7.1.0",
+        "@cycle/isolate": "^4.2.0",
+        "@cycle/run": "^5.2.0",
+        "@cycle/state": "^1.1.0",
+        "@cycle/time": "^0.19.0",
+        "cyclejs-utils": "^4.0.2",
+        "cyclic-router": "^6.0.0",
+        "switch-path": "^1.2.0",
+        "xstream": "^11.7.0"
+    },
+    "one-fits-all": true
 }
